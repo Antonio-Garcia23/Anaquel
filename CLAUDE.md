@@ -59,6 +59,7 @@ docs/           documentación del proyecto
 - Muestra el plan antes de hacer cambios grandes.
 - Haz cambios pequeños y enfocados.
 - No instales librerías sin decírmelo antes.
+- Nunca hagas commit si no te lo pido.
 - Al terminar cada tarea, corre `npx tsc --noEmit` y `npx expo lint`.
 
 ## Seguridad
