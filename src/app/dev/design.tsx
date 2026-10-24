@@ -1,11 +1,12 @@
 // Pantalla temporal para revisar el sistema de diseño; se borrará.
-// Excepción a la regla de i18n: sus textos van escritos aquí porque i18next aún no está configurado.
 
 import { Redirect } from 'expo-router';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { loadLanguagePreference, setLanguagePreference, type LanguagePreference } from '@/i18n';
 import { Button, GeneratedCover, Text } from '@/ui';
 import {
   coverColors,
@@ -15,16 +16,13 @@ import {
   type ThemePreference,
 } from '@/ui/theme';
 
-const themeOptions: { value: ThemePreference; label: string }[] = [
-  { value: 'light', label: 'Claro' },
-  { value: 'dark', label: 'Oscuro' },
-  { value: 'system', label: 'Sistema' },
-];
+const themeOptions: ThemePreference[] = ['light', 'dark', 'system'];
+const languageOptions: LanguagePreference[] = ['es', 'en', 'system'];
 
 const themeColorNames = Object.keys(lightColors) as ThemeColorName[];
 const coverColorEntries = Object.entries(coverColors);
 
-// Elegidos para que el hash dé los seis colores de portada.
+// Elegidos para que el hash dé los seis colores de portada. Son datos de ejemplo, no se traducen.
 const sampleBooks = [
   { title: 'Ficciones', author: 'Jorge Luis Borges' },
   { title: 'Los de abajo', author: 'Mariano Azuela' },
@@ -55,11 +53,18 @@ function Swatch({ name, color }: { name: string; color: string }) {
 }
 
 export default function DesignScreen() {
+  const { t } = useTranslation();
   const { preference, setPreference, colors } = useTheme();
+  const [language, setLanguage] = useState(loadLanguagePreference);
   const insets = useSafeAreaInsets();
 
   if (!__DEV__) {
     return <Redirect href="/" />;
+  }
+
+  function chooseLanguage(next: LanguagePreference) {
+    setLanguage(next);
+    setLanguagePreference(next);
   }
 
   return (
@@ -68,24 +73,39 @@ export default function DesignScreen() {
       contentContainerClassName="gap-8 px-4"
       contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 32 }}
     >
-      <Text variant="display">Sistema de diseño</Text>
+      <Text variant="display">{t('devDesign.title')}</Text>
 
-      <Section title="Tema">
+      <Section title={t('devDesign.sections.theme')}>
         <View className="flex-row gap-2">
           {themeOptions.map((option) => (
             <Button
-              key={option.value}
-              title={option.label}
-              variant={preference === option.value ? 'primary' : 'secondary'}
-              accessibilityState={{ selected: preference === option.value }}
-              onPress={() => setPreference(option.value)}
+              key={option}
+              title={t(`devDesign.theme.${option}`)}
+              variant={preference === option ? 'primary' : 'secondary'}
+              accessibilityState={{ selected: preference === option }}
+              onPress={() => setPreference(option)}
               className="flex-1"
             />
           ))}
         </View>
       </Section>
 
-      <Section title="Colores">
+      <Section title={t('devDesign.sections.language')}>
+        <View className="flex-row gap-2">
+          {languageOptions.map((option) => (
+            <Button
+              key={option}
+              title={t(`devDesign.language.${option}`)}
+              variant={language === option ? 'primary' : 'secondary'}
+              accessibilityState={{ selected: language === option }}
+              onPress={() => chooseLanguage(option)}
+              className="flex-1"
+            />
+          ))}
+        </View>
+      </Section>
+
+      <Section title={t('devDesign.sections.colors')}>
         <View className="-m-1 flex-row flex-wrap">
           {themeColorNames.map((name) => (
             <Swatch key={name} name={name} color={colors[name]} />
@@ -98,29 +118,29 @@ export default function DesignScreen() {
         </View>
       </Section>
 
-      <Section title="Textos">
+      <Section title={t('devDesign.sections.texts')}>
         <View className="gap-2 rounded-lg bg-surface p-4">
-          <Text variant="display">Display · Literata</Text>
-          <Text variant="title">Title · Literata</Text>
-          <Text variant="body">Body · Figtree. Tu biblioteca, en tu bolsillo y sin internet.</Text>
-          <Text variant="caption">Caption · Figtree</Text>
+          <Text variant="display">{t('devDesign.samples.display')}</Text>
+          <Text variant="title">{t('devDesign.samples.title')}</Text>
+          <Text variant="body">{t('devDesign.samples.body')}</Text>
+          <Text variant="caption">{t('devDesign.samples.caption')}</Text>
           <Text variant="body" tone="muted">
-            Tono muted para textos secundarios.
+            {t('devDesign.samples.muted')}
           </Text>
         </View>
       </Section>
 
-      <Section title="Botones">
+      <Section title={t('devDesign.sections.buttons')}>
         <View className="gap-3">
-          <Button variant="primary" title="Agregar libro" />
-          <Button variant="secondary" title="Escanear ISBN" />
-          <Button variant="ghost" title="Ver detalles" />
-          <Button variant="danger" title="Eliminar libro" />
-          <Button variant="primary" title="Deshabilitado" disabled />
+          <Button variant="primary" title={t('devDesign.buttons.primary')} />
+          <Button variant="secondary" title={t('devDesign.buttons.secondary')} />
+          <Button variant="ghost" title={t('devDesign.buttons.ghost')} />
+          <Button variant="danger" title={t('devDesign.buttons.danger')} />
+          <Button variant="primary" title={t('devDesign.buttons.disabled')} disabled />
         </View>
       </Section>
 
-      <Section title="Portadas generadas">
+      <Section title={t('devDesign.sections.covers')}>
         <View className="flex-row flex-wrap gap-4">
           {sampleBooks.map((book) => (
             <GeneratedCover key={book.title} title={book.title} author={book.author} width={96} />

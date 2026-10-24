@@ -1,4 +1,6 @@
 import '../global.css';
+// Inicializa i18next antes de que se dibuje cualquier pantalla.
+import '@/i18n';
 
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';

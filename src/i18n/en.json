@@ -1,0 +1,40 @@
+{
+  "home": {
+    "designSystemLink": "Design system"
+  },
+  "devDesign": {
+    "title": "Design system",
+    "sections": {
+      "theme": "Theme",
+      "language": "Language",
+      "colors": "Colors",
+      "texts": "Text",
+      "buttons": "Buttons",
+      "covers": "Generated covers"
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": {
+      "es": "Español",
+      "en": "English",
+      "system": "System"
+    },
+    "samples": {
+      "display": "Display · Literata",
+      "title": "Title · Literata",
+      "body": "Body · Figtree. Your library, in your pocket, even offline.",
+      "caption": "Caption · Figtree",
+      "muted": "Muted tone for secondary text."
+    },
+    "buttons": {
+      "primary": "Add book",
+      "secondary": "Scan ISBN",
+      "ghost": "See details",
+      "danger": "Delete book",
+      "disabled": "Disabled"
+    }
+  }
+}
