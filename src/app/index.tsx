@@ -1,35 +1,18 @@
-import { StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Link } from 'expo-router';
+import { View } from 'react-native';
+
+import { Button, Text } from '@/ui';
 
 export default function HomeScreen() {
-  const isDark = useColorScheme() === 'dark';
-
   return (
-    <View style={[styles.container, isDark ? styles.containerDark : styles.containerLight]}>
-      <Text style={[styles.title, isDark ? styles.titleDark : styles.titleLight]}>Anaquel</Text>
+    <View className="flex-1 items-center justify-center gap-6 bg-bg">
+      <Text variant="display">Anaquel</Text>
+      {/* Excepción temporal a la regla de i18n: enlace solo de desarrollo, se borra con /dev/design. */}
+      {__DEV__ ? (
+        <Link href="/dev/design" asChild>
+          <Button variant="ghost" title="Sistema de diseño" />
+        </Link>
+      ) : null}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  containerLight: {
-    backgroundColor: '#F4F1EA',
-  },
-  containerDark: {
-    backgroundColor: '#1C1B19',
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: '600',
-  },
-  titleLight: {
-    color: '#1C1B19',
-  },
-  titleDark: {
-    color: '#F4F1EA',
-  },
-});
