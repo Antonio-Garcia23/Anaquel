@@ -1,6 +1,6 @@
 import '../global.css';
-// Inicializa i18next antes de que se dibuje cualquier pantalla.
-import '@/i18n';
+// Importar @/i18n inicializa i18next antes de que se dibuje cualquier pantalla.
+import { useSystemLanguageSync } from '@/i18n';
 
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -13,6 +13,7 @@ import { fonts, ThemeProvider } from '@/ui/theme';
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useSystemLanguageSync();
   const [fontsLoaded, fontError] = useFonts(fonts);
   // Si las fuentes fallan, la app arranca igual con las del sistema.
   const ready = fontsLoaded || fontError !== null;

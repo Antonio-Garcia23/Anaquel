@@ -1,5 +1,6 @@
-import { getLocales } from 'expo-localization';
+import { getLocales, useLocales } from 'expo-localization';
 import { createInstance } from 'i18next';
+import { useEffect } from 'react';
 import { initReactI18next } from 'react-i18next';
 
 import en from './en.json';
@@ -28,10 +29,14 @@ function isLanguage(value: string | null | undefined): value is Language {
   return value === 'es' || value === 'en';
 }
 
-// Idioma del teléfono; si no es español ni inglés, la app queda en español.
-export function systemLanguage(): Language {
-  const code = getLocales()[0]?.languageCode;
+// Si el teléfono no está en español ni en inglés, la app queda en español.
+function languageFromCode(code: string | null | undefined): Language {
   return isLanguage(code) ? code : defaultLanguage;
+}
+
+// Idioma del teléfono en este momento.
+export function systemLanguage(): Language {
+  return languageFromCode(getLocales()[0]?.languageCode);
 }
 
 export function resolveLanguage(preference: LanguagePreference): Language {
@@ -45,6 +50,18 @@ export function setLanguagePreference(preference: LanguagePreference): void {
 }
 
 export { loadLanguagePreference, type LanguagePreference };
+
+// Con la preferencia "Sistema", sigue al idioma del teléfono mientras la app está abierta.
+// En Android se puede cambiar el idioma sin reiniciar la app; en iOS el sistema la reinicia.
+export function useSystemLanguageSync(): void {
+  const phoneLanguage = languageFromCode(useLocales()[0]?.languageCode);
+
+  useEffect(() => {
+    if (loadLanguagePreference() === 'system' && i18n.language !== phoneLanguage) {
+      void i18n.changeLanguage(phoneLanguage);
+    }
+  }, [phoneLanguage]);
+}
 
 // Los textos van dentro de la app, así que la inicialización es inmediata (sin esperar red).
 void i18n.use(initReactI18next).init({
